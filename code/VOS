@@ -1,0 +1,19 @@
+#!/bin/bash
+
+#SBATCH --time=2-00:00:00
+#SBATCH -n1
+#SBATCH -c4
+#SBATCH --mem-per-cpu=16G
+#SBATCH --gres=gpu:1
+
+
+nvidia-smi
+
+VRAM=`nvidia-smi --query-gpu=memory.total --format=csv | head -2 | tail -1 | awk '{print $1}'`
+
+module load opencv
+module load anaconda
+source activate pytorch
+python3 train.py $VRAM
+
+nvidia-smi
